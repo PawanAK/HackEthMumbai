@@ -60,7 +60,7 @@ async function getResults() {
 
 async function uploadFile(file) {
     const data = new FormData();
-    data.append("file", file, file.name);
+    data.append("file", new Blob([file.buffer]), file.name);
     const response = await fetch("https://api.liteseed.xyz/data", { method: "POST", body: data });
     return await response.text();
 }

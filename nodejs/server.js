@@ -1,11 +1,13 @@
 // app.js
-
+const cors = require('cors')
 const express = require('express')
 // import { uploadFile, sendMessage, joinGroup, broadcastMessage, transfer, getResults } 
 const { uploadFile, sendMessage, joinGroup, transfer, getResults, broadcastMessage }
     = require('./route.js')
 
+
 const app = express();
+app.use(cors())
 const PORT = process.env.PORT || 3000;
 
 // Middleware to parse JSON requests
