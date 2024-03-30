@@ -1,7 +1,5 @@
-// src/App.js
 import React, { useState } from "react";
 import axios from "axios";
-import { ArweaveWebWallet } from "arweave-wallet-connector";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -9,30 +7,8 @@ function App() {
   const [quantity, setQuantity] = useState("");
   const [broadcastMessage, setBroadcastMessage] = useState("");
   const [file, setFile] = useState(null);
+  const [userAddress, setUserAddress] = useState("");
   const [response, setResponse] = useState("");
-  const [walletAddress, setWalletAddress] = useState(null);
-
-  // Function to handle wallet connection
-  const connectWallet = async () => {
-    try {
-      const wallet = new ArweaveWebWallet({
-        name: "Connector Example",
-        logo: "https://jfbeats.github.io/ArweaveWalletConnector/placeholder.svg",
-      });
-
-      wallet.setUrl("arweave.app");
-      await wallet.connect();
-
-      // Log the wallet address upon successful connection
-      const address = await wallet.getActiveAddress();
-      console.log("Wallet connected:", address);
-
-      // Update wallet address state
-      setWalletAddress(address);
-    } catch (error) {
-      console.error("Error connecting to wallet:", error);
-    }
-  };
 
   const sendMessage = async () => {
     try {
@@ -86,19 +62,20 @@ function App() {
     }
   };
 
+  const addUser = async () => {
+    try {
+      await axios.post("http://localhost:3000/api/add-user", {
+        address: userAddress,
+      });
+      setResponse("User added successfully");
+    } catch (error) {
+      setResponse("Error adding user");
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">Backend Interaction UI</h1>
-
-      {/* Connect Wallet Button */}
-      <button
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-        onClick={connectWallet}>
-        Connect Wallet
-      </button>
-
-      {/* Display Wallet Address */}
-      {walletAddress && <p className="mt-2">Wallet Address: {walletAddress}</p>}
 
       <input
         type="text"
@@ -169,6 +146,21 @@ function App() {
         className="bg-blue-500 text-white px-4 py-2 rounded"
         onClick={uploadFile}>
         Upload File
+      </button>
+
+      <hr className="my-4" />
+
+      <input
+        type="text"
+        className="border p-2 mb-2 w-full"
+        placeholder="Enter user address"
+        value={userAddress}
+        onChange={(e) => setUserAddress(e.target.value)}
+      />
+      <button
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+        onClick={addUser}>
+        Add User
       </button>
 
       {response && <p className="mt-4">{response}</p>}

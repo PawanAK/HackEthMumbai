@@ -24,6 +24,8 @@ async function sendMessage(message) {
     return await performNetworkRequest({ data: message });
 }
 
+
+
 async function joinGroup() {
     return await performNetworkRequest({
         tags: [{ name: "Action", value: "Register" }],
@@ -64,6 +66,24 @@ async function uploadFile(file) {
     const response = await fetch("https://api.liteseed.xyz/data", { method: "POST", body: data });
     return await response.text();
 }
+
+// route.js
+
+async function addUser(address) {
+    try {
+        // Fund the user with some amount
+        await transfer(address, '10'); // Assuming you want to fund each user with 10 units
+
+        // Register the user to the group
+        await joinGroup(address);
+
+        console.log('User added successfully:', address);
+    } catch (error) {
+        console.error('Error adding user:', error);
+        throw error;
+    }
+}
+
 
 module.exports = {
     sendMessage,
