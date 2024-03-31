@@ -1,7 +1,5 @@
-// src/App.js
 import React, { useState } from "react";
 import axios from "axios";
-import { ArweaveWebWallet } from "arweave-wallet-connector";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -10,29 +8,7 @@ function App() {
   const [broadcastMessage, setBroadcastMessage] = useState("");
   const [file, setFile] = useState(null);
   const [response, setResponse] = useState("");
-  const [walletAddress, setWalletAddress] = useState(null);
-
-  // Function to handle wallet connection
-  const connectWallet = async () => {
-    try {
-      const wallet = new ArweaveWebWallet({
-        name: "Connector Example",
-        logo: "https://jfbeats.github.io/ArweaveWalletConnector/placeholder.svg",
-      });
-
-      wallet.setUrl("arweave.app");
-      await wallet.connect();
-
-      // Log the wallet address upon successful connection
-      const address = await wallet.getActiveAddress();
-      console.log("Wallet connected:", address);
-
-      // Update wallet address state
-      setWalletAddress(address);
-    } catch (error) {
-      console.error("Error connecting to wallet:", error);
-    }
-  };
+  const [walletAddress, setWalletAddress] = useState("");
 
   const sendMessage = async () => {
     try {
@@ -86,19 +62,35 @@ function App() {
     }
   };
 
+  const generateWallet = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/generate-wallet"
+      );
+      setWalletAddress(response.data.address);
+      setResponse("Wallet generated successfully");
+    } catch (error) {
+      setResponse("Error generating wallet");
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">Backend Interaction UI</h1>
 
-      {/* Connect Wallet Button */}
       <button
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-        onClick={connectWallet}>
-        Connect Wallet
+        className="bg-blue-500 text-white px-4 py-2 rounded mr-4"
+        onClick={generateWallet}>
+        Generate Wallet
       </button>
 
-      {/* Display Wallet Address */}
-      {walletAddress && <p className="mt-2">Wallet Address: {walletAddress}</p>}
+      {walletAddress && (
+        <div className="mt-4">
+          <p>Wallet Address: {walletAddress}</p>
+        </div>
+      )}
+
+      <hr className="my-4" />
 
       <input
         type="text"

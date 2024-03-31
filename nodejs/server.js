@@ -1,19 +1,23 @@
-// app.js
 const cors = require('cors')
 const express = require('express')
-// import { uploadFile, sendMessage, joinGroup, broadcastMessage, transfer, getResults } 
-const { uploadFile, sendMessage, joinGroup, transfer, getResults, broadcastMessage }
+const { uploadFile, sendMessage, joinGroup, transfer, getResults, broadcastMessage, generateWallet }
     = require('./route.js')
-
 
 const app = express();
 app.use(cors())
 const PORT = process.env.PORT || 3000;
 
-// Middleware to parse JSON requests
 app.use(express.json());
 
-// Define routes
+app.post('/api/generate-wallet', async (req, res) => {
+    try {
+        const walletInfo = await generateWallet();
+        res.json(walletInfo);
+    } catch (error) {
+        res.status(500).json({ error: "Error generating wallet" });
+    }
+});
+
 app.post('/api/send-message', async (req, res) => {
     const { message } = req.body;
     await sendMessage(message);
@@ -43,13 +47,11 @@ app.get('/api/results', async (req, res) => {
 });
 
 app.post('/api/upload', async (req, res) => {
-    // Assuming you're sending a file in the request body
     const file = req.file;
     await uploadFile(file);
     res.send('File uploaded successfully');
 });
 
-// Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

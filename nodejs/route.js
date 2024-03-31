@@ -1,9 +1,10 @@
 const { message, createDataItemSigner, results } = require("@permaweb/aoconnect");
-const { readFileSync } = require("fs");
+const { writeFileSync, fs } = require("fs");
 const FormData = require('form-data');
+const Arweave = require('arweave');
 
-const ID = "9wOEfhigYvpER1TFdiFzplkSQtU7id_vdu6js2YzHuU";
-const wallet = JSON.parse(readFileSync("./wallet.json").toString());
+const ID = "-mUdnaFFMygLmqu2-FHCYUDYYQN9aaAbpIi8Tu1Ajzs";
+const wallet = JSON.parse(readFileSync("./walllet.json").toString());
 
 async function performNetworkRequest(options) {
     try {
@@ -65,11 +66,29 @@ async function uploadFile(file) {
     return await response.text();
 }
 
+async function generateWallet() {
+    try {
+        let arweave = Arweave.init({});
+        let key = await arweave.wallets.generate();
+        let address = await arweave.wallets.jwkToAddress(key);
+
+        // Save the generated key to wallet.json
+        fs.writeFileSync('walllet.json', JSON.stringify(key));
+
+        return { address };
+    } catch (error) {
+        console.error("Error generating wallet:", error);
+        throw error;
+    }
+}
+
+
 module.exports = {
     sendMessage,
     joinGroup,
     broadcastMessage,
     transfer,
     getResults,
-    uploadFile
+    uploadFile, generateWallet
 };
+// Path: Frontend/fullstack/nodejs/route.js
