@@ -7,6 +7,7 @@ function App() {
   const [quantity, setQuantity] = useState("");
   const [broadcastMessage, setBroadcastMessage] = useState("");
   const [file, setFile] = useState(null);
+  const [userAddress, setUserAddress] = useState("");
   const [response, setResponse] = useState("");
   const [walletAddress, setWalletAddress] = useState("");
 
@@ -161,6 +162,21 @@ function App() {
         className="bg-blue-500 text-white px-4 py-2 rounded"
         onClick={uploadFile}>
         Upload File
+      </button>
+
+      <hr className="my-4" />
+
+      <input
+        type="text"
+        className="border p-2 mb-2 w-full"
+        placeholder="Enter user address"
+        value={userAddress}
+        onChange={(e) => setUserAddress(e.target.value)}
+      />
+      <button
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+        onClick={addUser}>
+        Add User
       </button>
 
       {response && <p className="mt-4">{response}</p>}

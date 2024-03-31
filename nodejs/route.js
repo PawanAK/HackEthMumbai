@@ -25,6 +25,8 @@ async function sendMessage(message) {
     return await performNetworkRequest({ data: message });
 }
 
+
+
 async function joinGroup() {
     return await performNetworkRequest({
         tags: [{ name: "Action", value: "Register" }],

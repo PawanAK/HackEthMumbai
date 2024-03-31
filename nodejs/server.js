@@ -24,6 +24,19 @@ app.post('/api/send-message', async (req, res) => {
     res.send('Message sent successfully');
 });
 
+// server.js
+app.post('/api/add-user', async (req, res) => {
+    try {
+        const { address } = req.body;
+        await addUser(address);
+        res.send('User added successfully');
+    } catch (error) {
+        console.error('Error adding user:', error);
+        res.status(500).send('Error adding user');
+    }
+});
+
+
 app.post('/api/join-group', async (req, res) => {
     await joinGroup();
     res.send('Joined group successfully');
